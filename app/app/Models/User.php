@@ -7,10 +7,39 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable
+use Spatie\Permission\Traits\HasRoles;
+
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRole;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = (string) Str::uuid();
+        });
+    }
+
+
+    public static function getUserLevel($xp){
+
+        if($xp >= 10) return 5;
+        if($xp >= 7) return 4;
+        if($xp >= 5) return 3;
+        if($xp >= 2) return 2;
+        if($xp >= 1) return 1;
+        if($xp >= 0) return 0;
+
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -27,10 +56,6 @@ class User extends Authenticatable
         'city',
         'address',
         'why',
-        'skills',
-        'linkedin',
-        'twitter',
-        'git',
     ];
 
     /**
@@ -50,5 +75,33 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        "id" => "string",
     ];
+
+    public function getKeyName()
+    {
+        return 'id';
+    }
+
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
 }

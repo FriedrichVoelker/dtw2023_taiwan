@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
@@ -25,10 +25,10 @@ return new class extends Migration
             $table->string('city');
             $table->string('address');
             $table->mediumText('why')->nullable();
-            $table->mediumText('skills')->nullable();
-            $table->string("linkedin")->nullable();
-            $table->string("twitter")->nullable();
-            $table->string("git")->nullable();
+            // $table->mediumText('skills')->nullable();
+            // $table->string("linkedin")->nullable();
+            // $table->string("twitter")->nullable();
+            // $table->string("git")->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

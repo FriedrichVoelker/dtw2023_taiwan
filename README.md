@@ -1,1 +1,1 @@
-"# Design Thinking Workshop 2023 - Taiwan"  
+# Design Thinking Workshop 2023 - Taiwan

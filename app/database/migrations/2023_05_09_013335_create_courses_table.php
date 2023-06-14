@@ -14,14 +14,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('courses', function (Blueprint $table) {
-            $table->uuid("id")->primary();
-            $table->string("name");
+            $table->id();
+            $table->string("name")->nullable();
+            $table->integer("needed_inspirers")->nullable()->default(6);
+            $table->string("location")->nullable()->default("@home");
             $table->mediumText("description");
-            $table->foreignId('course_type_id')->constrained();
+            $table->unsignedBigInteger('course_type_id');
             $table->integer("duration")->nullable();
             $table->string("image")->nullable();
             $table->timestamp("start_date")->nullable();
             $table->timestamps();
+
+            // $table->index("course_type_id");
+            // $table->foreign("course_type_id")->references("id")->on("course_types")->onDelete("cascade");
         });
     }
 
